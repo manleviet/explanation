@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "explanation"
+version = "0.1.0"
+description = "Explanation framework for flamapy (conflict detection and diagnosis on feature models)"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+# EXACT pins (reproducibility). ``~=`` floats onto flamapy 2.6.0 FINAL, whose
+# new uvl_reader breaks the suite (IndexError in task_preparation); and PEP 440
+# treats dev4 < 2.6.0, so a ``<2.6.0`` bound would exclude dev4. Only ``==``
+# locks the dev build the framework was verified against.
+dependencies = [
+    "flamapy-fw==2.6.0.dev4",
+    "flamapy-fm==2.6.0.dev4",
+    "flamapy-sat==2.6.0.dev4",
+    "python-sat==0.1.8.dev17",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "parameterized",
+]
+
+[tool.setuptools.packages.find]
+include = ["explanation*", "profiling*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
