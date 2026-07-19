@@ -11,8 +11,16 @@ it instead of keeping their own copy. It also feeds the public flamapy plugin
 ## Requirements
 
 - Python **>= 3.11**
-- Dependencies (resolved automatically): `flamapy-fw~=2.6.0.dev4`,
-  `flamapy-fm~=2.6.0.dev4`, `flamapy-sat~=2.6.0.dev4`, `python-sat~=0.1.7.dev1`
+- Dependencies (resolved automatically), pinned **exactly** in `pyproject.toml`:
+  `flamapy-fw==2.6.0.dev4`, `flamapy-fm==2.6.0.dev4`, `flamapy-sat==2.6.0.dev4`,
+  `python-sat==0.1.8.dev17`
+- Java runtime — only for the optional SAT4J backend
+  (`solver_apps/org.sat4j.core.jar`). The default PySAT backend needs no JVM.
+
+> **Do not loosen the pins to `~=`.** `~=2.6.0.dev4` resolves to `==2.6.*`, which
+> floats onto flamapy **2.6.0 final** — whose `uvl_reader` breaks the test suite.
+> PEP 440 also orders `dev4 < 2.6.0`, so a `<2.6.0` bound would exclude the very
+> build the framework is verified against. Only `==` locks it.
 
 ## Installation
 
@@ -68,6 +76,18 @@ editable (case 1) for dev or remote git (case 2) for sharing.
 ### 4. From PyPI (future)
 
 Once published: `pip install explanation`.
+
+## Verify the install
+
+```bash
+python -c "import explanation.api, profiling"   # both packages importable
+PYTHONPATH=. python -m pytest tests/ -q         # 275 tests (from a clone)
+```
+
+Consumers import through the single public façade — `from explanation.api import …`
+and `from profiling import …`. Deep imports (`explanation.models.*`,
+`explanation.operations.*`) are not a supported surface; see
+`docs/system-architecture.md`.
 
 ## Which method to use
 

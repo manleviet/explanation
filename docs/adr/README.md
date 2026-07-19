@@ -19,21 +19,22 @@ These decisions were made during the **ABC-v2 redesign** (July 2026), a rebuild 
 | [0003](0003-profiling-as-top-level-package.md) | `profiling` is a top-level package, not part of `explanation` | Accepted |
 | [0004](0004-checker-is-the-port-backend-is-the-adapter.md) | `checker` = port (algorithm-facing), `solver_backend` = adapter (solver-facing) | Accepted |
 | [0007](0007-no-runtime-read-only-views.md) | The name↔id catalog is a plain `dict` — no runtime read-only view | Accepted |
-| [0008](0008-run-result-and-result-data-stay-separate.md) | `ConGenRunResult` and `ConGenResultData` stay separate — write-product ≠ read-projection | Accepted |
 | [0009](0009-the-oracle-answers-it-does-not-provision.md) | The oracle answers questions; it does not provision the algorithm | Accepted |
 | [0010](0010-roles-are-declared-not-inferred.md) | Roles are declared, not inferred — protocol members are `@abstractmethod`; our oracles inherit the roles they play | Accepted |
 | [0011](0011-completion-bypasses-the-checker-port.md) | `complete_configuration` bypasses the checker port — knowingly; routing it through is a dataset migration, not a refactor | Accepted |
 | [0012](0012-immutability-at-construction-not-at-read.md) | `Task`/`OracleData` are deep-frozen — immutability at *construction* is free; immutability at *read* is a tax (reconciles with 0007; corrects its closing generalisation) | Accepted |
 | [0013](0013-is-consistent-and-find-model-are-two-questions.md) | Split `is_consistent`/`find_model` — the ~617 guard-negations are redundant for the SAT answer, load-bearing for the model; **4.2× on `run()`** (first measurable runtime win) | Accepted |
 | [0014](0014-parallel-executor-deferred-to-canonical.md) | The parallel executor is deferred to the canonical repo — `FastDiagP`, `get_instance`, `ProfilerMode.MULTI_PROCESS` are scaffolding, not dead code (guarded) | Accepted |
-| [0017](0017-reduce-discards-mss-order.md) | REDUCE discards the MSS ordering through `set()` — preserve `gamma1+gamma2` order; impl+AcqMSS/ConGen-golden regen deferred to a gated command | Accepted |
 
 > **Application-scoped ADRs live in AcqMSS.** ADRs **0005** (oracle/bias builder
-> in `conacq`), **0006** (`evaluation` in `conacq`), **0015** (example-mode pool
-> shuffle seeding), and **0016** (`shuffle_bias` no-op for QuAcq) concern the
-> `conacq`/`quacq` application tier, which is not part of this framework-only
-> repo. They remain in the AcqMSS repository. References to them in the ADR
-> bodies here (e.g. 0002 → 0005, 0017 → 0016) are historical and point there.
+> in `conacq`), **0006** (`evaluation` in `conacq`), **0008** (`ConGenRunResult`
+> vs `ConGenResultData` — `conacq/runners/`, `conacq/eval/result_loader.py`),
+> **0015** (example-mode pool shuffle seeding), **0016** (`shuffle_bias` no-op
+> for QuAcq), and **0017** (REDUCE discards the MSS ordering —
+> `conacq/algorithms/acqmss/reduce.py`) concern the `conacq`/`quacq` application
+> tier, which is not part of this framework-only repo. They remain in the AcqMSS
+> repository. References to them in the ADR bodies here (e.g. 0002 → 0005) are
+> historical and point there.
 
 ## Writing a new one
 
