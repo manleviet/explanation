@@ -17,6 +17,15 @@ it instead of keeping their own copy. It also feeds the public flamapy plugin
 - Java runtime — only for the optional SAT4J backend
   (`solver_apps/org.sat4j.core.jar`). The default PySAT backend needs no JVM.
 
+> **The jar does not travel with a `pip` install.** `solver_apps/` sits outside
+> the packaged modules (`include = ["explanation*", "profiling*"]`), so a remote
+> git install delivers the code without the jar. The SAT4J backend therefore
+> works only from a repo checkout, invoked with the repo root as the working
+> directory — the default jar path is relative. Anywhere else it raises
+> `FileNotFoundError`, which reads like a botched install but is not one: use a
+> PySAT backend, or pass an absolute path via
+> `build_checker(..., sat4j_jar_path=...)`.
+
 > **Do not loosen the pins to `~=`.** `~=2.6.0.dev4` resolves to `==2.6.*`, which
 > floats onto flamapy **2.6.0 final** — whose `uvl_reader` breaks the test suite.
 > PEP 440 also orders `dev4 < 2.6.0`, so a `<2.6.0` bound would exclude the very
